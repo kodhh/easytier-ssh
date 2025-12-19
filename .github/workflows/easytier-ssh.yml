@@ -1,0 +1,43 @@
+name: SSH via EasyTier
+
+on:
+  workflow_dispatch: # 手动触发
+
+jobs:
+  connect:
+    runs-on: ubuntu-latest
+    steps:
+      # 步骤1: 下载并运行EasyTier
+      - name: Setup EasyTier
+        run: |
+          # 下载适用于Linux的EasyTier核心程序
+          wget https://github.com/EasyTier/EasyTier/releases/download/v2.4.5/easytier-linux-x86_64-v2.4.5.zip
+          tar -xzf easytier-linux-x86_64-v2.4.5.zip
+          cd easytier-linux-x86_64-v2.4.5.zip
+          # 启动EasyTier，加入你的虚拟网络，并获取一个虚拟IP (例如 10.144.144.2)
+          sudo ./easytier-core  -d \
+            --network-name "${{ secrets.ET_NETWORK_NAME }}" \
+            --network-secret "${{ secrets.ET_NETWORK_SECRET }}" \
+            --p "${{ secrets.ET_PEER_URL }}" \
+            --daemon &
+          # 等待几秒让服务启动
+          sleep 5
+          # 使用easytier-cli查看本节点信息，获取虚拟IP
+          ./easytier-cli node
+
+      # 步骤2: 配置SSH服务以便连接（使用密钥更安全）
+      - name: Setup SSH with Key Authentication
+        run: |
+          # 1. 将你的SSH公钥写入authorized_keys
+          echo ${{ secrets.SSH_KEY }} >> ~/.ssh/authorized_keys
+          # 2. 确保权限正确
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+          # 3. 重启SSH服务（Ubuntu）
+          sudo service ssh restart
+          # 4. 输出提示信息
+          echo "SSH服务已配置，等待连接..."
+
+      # 步骤3: 保持工作流运行（GitHub Action最多运行6小时）
+      - name: Keep alive
+        run: sleep 6h
