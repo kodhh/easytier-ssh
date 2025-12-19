@@ -5,7 +5,7 @@ on:
 
 jobs:
   connect:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-16.04
     steps:
       # 步骤1: 下载并运行EasyTier
       - name: Setup EasyTier
