@@ -23,6 +23,10 @@ jobs:
           sleep 5
           # 使用easytier-cli查看本节点信息，获取虚拟IP
           ./easytier-cli node
+        env:
+          ET_NETWORK_NAME: ${{ secrets.ET_NETWORK_NAME }}
+          ET_NETWORK_SECRET: ${{ secrets.ET_NETWORK_SECRET }}
+          ET_PEER_URL: ${{ secrets.ET_PEER_URL }}
 
       # 步骤2: 配置SSH服务以便连接（使用密钥更安全）
       - name: Setup SSH with Key Authentication
@@ -36,6 +40,8 @@ jobs:
           sudo service ssh restart
           # 4. 输出提示信息
           echo "SSH服务已配置，等待连接..."
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
 
       # 步骤3: 保持工作流运行（GitHub Action最多运行6小时）
       - name: Keep alive
