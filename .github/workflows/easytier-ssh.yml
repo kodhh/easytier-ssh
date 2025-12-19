@@ -30,7 +30,7 @@ jobs:
           # 1. 将你的SSH公钥写入authorized_keys
           whoami
           mkdir ~/.ssh
-          cat ${{ secrets.SSH_KEY }} > ~/.ssh/authorized_keys
+          echo ${{ secrets.SSH_KEY }} > ~/.ssh/authorized_keys
           # 2. 确保权限正确
           chmod 700 ~/.ssh
           chmod 600 ~/.ssh/authorized_keys
