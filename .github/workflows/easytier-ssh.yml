@@ -6,10 +6,6 @@ on:
 jobs:
   connect:
     runs-on: ubuntu-latest
-    env:
-        ET_NETWORK_NAME: ${{ secrets.ET_NETWORK_NAME }}
-        ET_NETWORK_SECRET: ${{ secrets.ET_NETWORK_SECRET }}
-        ET_PEER_URL: ${{ secrets.ET_PEER_URL }}
     steps:
       # 步骤1: 下载并运行EasyTier
       - name: Setup EasyTier
@@ -30,8 +26,6 @@ jobs:
 
       # 步骤2: 配置SSH服务以便连接（使用密钥更安全）
       - name: Setup SSH with Key Authentication
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
           # 1. 将你的SSH公钥写入authorized_keys
           echo ${{ secrets.SSH_KEY }} >> ~/.ssh/authorized_keys
