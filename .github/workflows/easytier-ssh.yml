@@ -28,7 +28,7 @@ jobs:
       - name: Setup SSH with Key Authentication
         run: |
           # 1. 将你的SSH公钥写入authorized_keys
-         whoami
+          whoami
           mkdir ~/.ssh
           cat ${{ secrets.SSH_KEY }} > ~/.ssh/authorized_keys
           # 2. 确保权限正确
