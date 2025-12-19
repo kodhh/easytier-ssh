@@ -12,7 +12,7 @@ jobs:
         run: |
           # 下载适用于Linux的EasyTier核心程序
           wget --no-check-certificate https://github.com/EasyTier/EasyTier/releases/download/v2.4.5/easytier-linux-x86_64-v2.4.5.zip
-          unzip easytier-linux-x86_64-v2.4.5.zip -d easytier-linux-x86_64
+          unzip easytier-linux-x86_64-v2.4.5.zip -d .
           cd easytier-linux-x86_64
           # 启动EasyTier，加入你的虚拟网络，并获取一个虚拟IP (例如 10.144.144.2)
           sudo ./easytier-core  -d \
