@@ -18,7 +18,7 @@ jobs:
           sudo ./easytier-core  -d \
             --network-name "${{ secrets.ET_NETWORK_NAME }}" \
             --network-secret "${{ secrets.ET_NETWORK_SECRET }}" \
-            -p "${{ secrets.ET_PEER_URL1 }}" /
+            -p "${{ secrets.ET_PEER_URL1 }}" \
             -p "${{ secrets.ET_PEER_URL2 }}" &
           # 等待几秒让服务启动
           sleep 20
