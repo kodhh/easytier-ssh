@@ -13,8 +13,11 @@ jobs:
       - name: Setup Tailscale
         uses: tailscale/github-action@v2
         with:
-          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
-          version: latest
+          # Use these new inputs instead of the deprecated 'authkey'
+          oauth-client-id: ${{ secrets.TAILSCALE_OAUTH_CLIENT_ID }}
+          oauth-client-secret: ${{ secrets.TAILSCALE_OAUTH_CLIENT_SECRET }}
+          # Optional: Specify tags if your OAuth client has multiple tags
+          # tags: tag:github-actions
 
       - name: Wait for Tailscale to be ready
         run: |
