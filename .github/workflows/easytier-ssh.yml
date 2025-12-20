@@ -5,7 +5,7 @@ on:
 
 jobs:
   connect:
-    runs-on: debian-13
+    runs-on: ubuntu-24.04
     steps:
       # 步骤1: 下载并运行EasyTier
       - name: Setup EasyTier
