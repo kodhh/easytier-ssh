@@ -1,0 +1,42 @@
+name: SSH via EasyTier
+
+on:
+  workflow_dispatch: # 手动触发
+
+jobs:
+  connect:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          authkey: ${{ secrets.TAILSCALE_AUTHKEY }}
+          version: latest
+
+      - name: Wait for Tailscale to be ready
+        run: |
+          until tailscale status; do
+            sleep 1
+          done
+
+      # 步骤2: 配置SSH服务以便连接（使用密钥更安全）
+      - name: Setup SSH with Key Authentication
+        run: |
+          # 1. 将你的SSH公钥写入authorized_keys
+          whoami
+          mkdir ~/.ssh
+          echo ${{ secrets.SSH_KEY }} > ~/.ssh/authorized_keys
+          # 2. 确保权限正确
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+          # 3. 重启SSH服务（Ubuntu）
+          sudo service ssh restart
+          # 4. 输出提示信息
+          echo "SSH服务已配置，等待连接..."
+
+      # 步骤3: 保持工作流运行（GitHub Action最多运行6小时）
+      - name: Keep alive
+        run: sleep 6h
