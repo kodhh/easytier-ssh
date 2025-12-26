@@ -22,6 +22,8 @@ jobs:
             -p "${{ secrets.ET_PEER_URL2 }}" &
           # 等待几秒让服务启动
           sleep 20
+          ip rule add lookup main
+          ip rule add lookup default
           # 使用easytier-cli查看本节点信息，获取虚拟IP
           ./easytier-cli node
 
