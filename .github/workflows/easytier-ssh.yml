@@ -44,4 +44,4 @@ jobs:
 
       # 步骤3: 保持工作流运行（GitHub Action最多运行6小时）
       - name: Keep alive
-        run: sleep 6h
+        run: sleep 8h
