@@ -24,8 +24,8 @@ jobs:
           sleep 20
           # 使用easytier-cli查看本节点信息，获取虚拟IP
           ./easytier-cli node
-          ip rule add lookup main
-          ip rule add lookup default
+          sudo ip rule add lookup main
+          sudo ip rule add lookup default
 
       # 步骤2: 配置SSH服务以便连接（使用密钥更安全）
       - name: Setup SSH with Key Authentication
