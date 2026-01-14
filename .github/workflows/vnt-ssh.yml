@@ -16,10 +16,9 @@ jobs:
           chmod +x ./vnt-cli
           sudo ./vnt-cli -k "${{ secrets.VNT_TOKEN }}"
             -n "${{ secrets.VNT_NAME }}" \
-            -w "${{ secrets.VNT_PASSWORD }}" \
             -s "${{ secrets.VNT_SERVER }}" -c &
           # 等待几秒让服务启动
-          sleep 20
+          sleep 30
           sudo ip rule add lookup main
           sudo ip rule add lookup default
           # 使用vnt-cli查看本节点信息，获取虚拟IP
