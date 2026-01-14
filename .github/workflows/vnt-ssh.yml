@@ -11,7 +11,7 @@ jobs:
       - name: Setup EasyTier
         run: |
           # 下载适用于Linux的vnt核心程序
-          wget --no-check-certificate -qO- https://github.com/vnt-dev/vnt/releases/download/v1.2.17/vnt-x86_64-unknown-linux-musl-v1.2.17.tar.gz | tar -zxv
+          wget --no-check-certificate https://github.com/vnt-dev/vnt/releases/download/v1.2.17/vnt-x86_64-unknown-linux-musl-v1.2.17.tar.gz | tar -zxv
           # 启动vnt，加入你的虚拟网络，并获取一个虚拟IP (例如 10.144.144.2)
           chmod +x ./vnt-cli
           sudo setsid ./vnt-cli -k "${{ secrets.VNT_TOKEN }}"
