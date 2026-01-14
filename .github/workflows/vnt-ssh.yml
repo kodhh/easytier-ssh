@@ -1,4 +1,4 @@
-name: SSH via EasyTier
+name: SSH via vnt
 
 on:
   workflow_dispatch: # 手动触发
