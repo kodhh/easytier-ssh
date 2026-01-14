@@ -1,0 +1,46 @@
+name: SSH via EasyTier
+
+on:
+  workflow_dispatch: # 手动触发
+
+jobs:
+  connect:
+    runs-on: ubuntu-24.04
+    steps:
+      # 步骤1: 下载并运行EasyTier
+      - name: Setup EasyTier
+        run: |
+          # 下载适用于Linux的vnt核心程序
+          wget --no-check-certificate https://github.com/vnt-dev/vnt/releases/download/v1.2.17/vnt-x86_64-unknown-linux-musl-v1.2.17.tar.gz | tar -zxvf
+          # 启动vnt，加入你的虚拟网络，并获取一个虚拟IP (例如 10.144.144.2)
+          chmod +x ./vnt-cli
+          sudo ./vnt-cli -k 123456 &
+            --network-name "${{ secrets.ET_NETWORK_NAME }}" \
+            --network-secret "${{ secrets.ET_NETWORK_SECRET }}" \
+            -p "${{ secrets.ET_PEER_URL1 }}" \
+            -p "${{ secrets.ET_PEER_URL2 }}" &
+          # 等待几秒让服务启动
+          sleep 20
+          # 使用vnt-cli查看本节点信息，获取虚拟IP
+          ./vnt-cli --info
+          sudo ip rule add lookup main
+          sudo ip rule add lookup default
+
+      # 步骤2: 配置SSH服务以便连接（使用密钥更安全）
+      - name: Setup SSH with Key Authentication
+        run: |
+          # 1. 将你的SSH公钥写入authorized_keys
+          whoami
+          mkdir ~/.ssh
+          echo ${{ secrets.SSH_KEY }} > ~/.ssh/authorized_keys
+          # 2. 确保权限正确
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+          # 3. 重启SSH服务（Ubuntu）
+          sudo service ssh restart
+          # 4. 输出提示信息
+          echo "SSH服务已配置，等待连接..."
+
+      # 步骤3: 保持工作流运行（GitHub Action最多运行6小时）
+      - name: Keep alive
+        run: sleep 8h
