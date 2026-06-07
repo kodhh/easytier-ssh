@@ -13,7 +13,7 @@ jobs:
           # 安装zstd解压工具
           sudo apt-get update
           sudo apt-get install -y zstd
-          
+
           # 下载并解压natfrp
           wget --no-check-certificate -O - https://nya.globalslb.net/natfrp/client/launcher-unix/3.1.8/natfrp-service_linux_amd64.tar.zst | zstd -d | tar -x
           chmod +x frpc natfrp-service
@@ -29,8 +29,8 @@ jobs:
           chmod +x easytier-core easytier-cli
           
           # 启动UDP监听（第一个实例）
-          setsid ./easytier-core -l upd://0.0.0.0:10001 --no-tun &
-          
+          setsid ./easytier-core -l  udp://0.0.0.0:10001 --no-tun &
+
           # 启动EasyTier，加入你的虚拟网络（第二个实例）
           sudo setsid ./easytier-core -d \
             --network-name "${{ secrets.ET_NETWORK_NAME }}" \
@@ -79,4 +79,4 @@ jobs:
       - name: Keep alive
         run: |
           echo "保持连接中... (最多6小时)"
-          sleep 6h
+          sleep 8h
