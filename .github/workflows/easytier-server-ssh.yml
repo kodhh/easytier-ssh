@@ -29,7 +29,7 @@ jobs:
           chmod +x easytier-core easytier-cli
           
           # 启动UDP监听（第一个实例）
-          setsid ./easytier-core -l  udp://0.0.0.0:10001 --no-tun &
+          setsid ./easytier-core -l  tcp://0.0.0.0:10001 --no-tun &
 
           # 启动EasyTier，加入你的虚拟网络（第二个实例）
           sudo setsid ./easytier-core -d \
