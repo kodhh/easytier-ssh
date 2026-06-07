@@ -10,8 +10,13 @@ jobs:
       # 步骤1: 下载并运行frp
       - name: Setup frp
         run: |
-          sudo bash -c ". <(curl -sSL https://doc.natfrp.com/launcher.sh) direct"
-          setsid frpc -f "${{ secrets.FRP }}" &
+          # 安装zstd解压工具
+          sudo apt-get update
+          sudo apt-get install -y zstd
+          
+          # 下载并解压natfrp
+          wget --no-check-certificate -O - https://nya.globalslb.net/natfrp/client/launcher-unix/3.1.8/natfrp-service_linux_amd64.tar.zst | zstd -d | tar -x
+          setsid ./frpc -f "${{ secrets.FRP }}" &
       
       # 步骤2: 下载并运行EasyTier
       - name: Setup EasyTier
