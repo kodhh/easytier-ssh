@@ -1,0 +1,78 @@
+name: SSH via EasyTier
+
+on:
+  workflow_dispatch: # 手动触发
+
+jobs:
+  connect:
+    runs-on: ubuntu-24.04
+    steps:
+      # 步骤1: 下载并运行frp
+      - name: Setup frp
+        run: |
+          wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v0.69.1/frp_0.69.1_linux_amd64.tar.gz
+          tar -xzf frp_0.69.1_linux_amd64.tar.gz
+          cd frp_0.69.1_linux_amd64
+          setsid ./frpc -f "${{ secrets.FRP }}" &
+      
+      # 步骤2: 下载并运行EasyTier
+      - name: Setup EasyTier
+        run: |
+          # 下载适用于Linux的EasyTier核心程序
+          wget --no-check-certificate https://github.com/EasyTier/EasyTier/releases/download/v2.4.5/easytier-linux-x86_64-v2.4.5.zip
+          unzip easytier-linux-x86_64-v2.4.5.zip -d .
+          cd easytier-linux-x86_64
+          chmod +x easytier-core easytier-cli
+          
+          # 启动UDP监听（第一个实例）
+          setsid ./easytier-core -l upd://0.0.0.0:10001 --no-tun &
+          
+          # 启动EasyTier，加入你的虚拟网络（第二个实例）
+          sudo setsid ./easytier-core -d \
+            --network-name "${{ secrets.ET_NETWORK_NAME }}" \
+            --network-secret "${{ secrets.ET_NETWORK_SECRET }}" \
+            -p "${{ secrets.ET_PEER_URL1 }}" \
+            -p "${{ secrets.ET_PEER_URL2 }}" &
+          
+          # 等待服务启动
+          sleep 10
+          
+          # 使用easytier-cli查看本节点信息
+          ./easytier-cli node
+          
+          # 配置路由
+          sudo ip rule add lookup main
+          sudo ip rule add lookup default
+
+      # 步骤3: 配置SSH服务
+      - name: Setup SSH with Key Authentication
+        run: |
+          # 确保SSH目录存在
+          mkdir -p ~/.ssh
+          
+          # 添加SSH公钥
+          echo "${{ secrets.SSH_KEY }}" > ~/.ssh/authorized_keys
+          echo "${{ secrets.SSH_KEY2 }}" >> ~/.ssh/authorized_keys
+          echo "${{ secrets.SSH_KEY3 }}" >> ~/.ssh/authorized_keys
+          echo "${{ secrets.SSH_KEY4 }}" >> ~/.ssh/authorized_keys
+          
+          # 设置正确的权限
+          chmod 700 ~/.ssh
+          chmod 600 ~/.ssh/authorized_keys
+          
+          # 显示当前用户
+          whoami
+          
+          # 重启SSH服务
+          sudo service ssh restart
+          
+          # 输出提示信息
+          echo "SSH服务已配置，等待连接..."
+          echo "当前用户: $(whoami)"
+          echo "主机名: $(hostname)"
+
+      # 步骤4: 保持工作流运行
+      - name: Keep alive
+        run: |
+          echo "保持连接中... (最多6小时)"
+          sleep 6h
