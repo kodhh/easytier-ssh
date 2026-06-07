@@ -10,10 +10,8 @@ jobs:
       # 步骤1: 下载并运行frp
       - name: Setup frp
         run: |
-          wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v0.69.1/frp_0.69.1_linux_amd64.tar.gz
-          tar -xzf frp_0.69.1_linux_amd64.tar.gz
-          cd frp_0.69.1_linux_amd64
-          setsid ./frpc -f "${{ secrets.FRP }}" &
+          sudo bash -c ". <(curl -sSL https://doc.natfrp.com/launcher.sh) direct"
+          setsid frpc -f "${{ secrets.FRP }}" &
       
       # 步骤2: 下载并运行EasyTier
       - name: Setup EasyTier
