@@ -15,7 +15,7 @@ jobs:
           unzip easytier-linux-x86_64-v2.4.5.zip -d .
           cd easytier-linux-x86_64
           # 启动EasyTier，加入你的虚拟网络，并获取一个虚拟IP (例如 10.144.144.2)
-          sudo ./easytier-core  -d \
+          sudo nohup ./easytier-core  -d \
             --network-name "${{ secrets.ET_NETWORK_NAME }}" \
             --network-secret "${{ secrets.ET_NETWORK_SECRET }}" \
             -p "${{ secrets.ET_PEER_URL1 }}" \
