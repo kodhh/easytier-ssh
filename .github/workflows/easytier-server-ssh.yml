@@ -17,7 +17,7 @@ jobs:
           # 下载并解压natfrp
           wget --no-check-certificate -O - https://nya.globalslb.net/natfrp/client/launcher-unix/3.1.8/natfrp-service_linux_amd64.tar.zst | zstd -d | tar -x
           chmod +x frpc natfrp-service
-          setsid ./frpc -f "${{ secrets.FRP }}" &
+          nohup ./frpc -f "${{ secrets.FRP }}" &
           sleep 20s
       
       # 步骤2: 下载并运行EasyTier
@@ -30,10 +30,10 @@ jobs:
           chmod +x easytier-core easytier-cli
           
           # 启动UDP监听（第一个实例）
-          setsid ./easytier-core -l  udp://0.0.0.0:10001 --no-tun --bind-device false &
+          nohup ./easytier-core -l  udp://0.0.0.0:10001 --no-tun --bind-device false &
 
           # 启动EasyTier，加入你的虚拟网络（第二个实例）
-          sudo setsid ./easytier-core -d \
+          sudo nohup ./easytier-core -d \
             --network-name "${{ secrets.ET_NETWORK_NAME }}" \
             --network-secret "${{ secrets.ET_NETWORK_SECRET }}" \
             -p "${{ secrets.ET_PEER_URL1 }}" \
