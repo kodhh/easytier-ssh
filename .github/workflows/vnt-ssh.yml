@@ -5,7 +5,7 @@ on:
 
 jobs:
   connect:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       # 步骤1: 下载并运行EasyTier
       - name: Setup EasyTier
