@@ -80,4 +80,4 @@ jobs:
       - name: Keep alive
         run: |
           echo "保持连接中... (最多6小时)"
-          sleep 8h
+          sleep 4h
